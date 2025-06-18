@@ -53,7 +53,7 @@ userRouter.post('/signin', async (req, res) => {
             //expires in 1 day
             { expiresIn: 60 *60 *24 }
         );
-        res.json({ message: "Login Successful", sessionToken });
+        res.json({ message: "Login Successful", sessionToken, user: user });
 
     } catch(err) {
         res.json({error: err});
