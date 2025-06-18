@@ -21,7 +21,7 @@ roomRouter.get("/allRooms", async (req, res) => {
 });
 
 //view a specific room by id
-roomRouter.get("/:roomName", async (req, res) => {
+roomRouter.get("/room/:roomName", async (req, res) => {
     try {
         const roomName = req.params.roomName;
         const room = await Room.findOne({ roomName: roomName})
