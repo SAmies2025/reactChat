@@ -3,10 +3,14 @@ import express from 'express';
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import userRouter from './routers/userRouter.js';
+import roomRouter from './routers/roomsRouter.js';
+import messageRouter from './routers/messageRouters.js';
 
 const app = express();
 app.use(express.json());
-app.use('/', userRouter);
+app.use(userRouter);
+app.use(roomRouter);
+app.use(messageRouter);
 
 //connect to database
 //supresses the error. may have to change it to false. I dont really understand the error.
