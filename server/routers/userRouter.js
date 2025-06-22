@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import validateSession from '../middlewares/validatesession.js';
 import bcrypt from 'bcrypt';
 import express from 'express';
 import { Router } from 'express';

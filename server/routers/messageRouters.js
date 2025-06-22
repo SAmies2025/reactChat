@@ -2,6 +2,8 @@ import { Router } from "express";
 import Message from "../models/Message.js";
 import User from "../models/User.js";
 import Room from "../models/Room.js";
+import isAdmin from "../middlewares/isAdmin.js";
+import validateSession from "../middlewares/validatesession.js";
 
 const messageRouter = Router();
 
@@ -34,11 +36,11 @@ messageRouter.get("/messages/:room_ID", async (req, res) => {
 });
 
 //create a new message
-messageRouter.post("/createMessage", async (req, res) => {
+messageRouter.post("/createMessage", validateSession, async (req, res) => {
     try {
         const newMessage = new Message({
             ...req.body
-        })
+        });
         await newMessage.save();
         res.json({ notice: 'message created successfully', message: newMessage})
     } catch (err) {
@@ -47,7 +49,7 @@ messageRouter.post("/createMessage", async (req, res) => {
 });
 
 //update message
-messageRouter.put("/updateMessage/:message_ID", async (req, res) => {
+messageRouter.put("/updateMessage/:message_ID", isAdmin, async (req, res) => {
     try {
         // Check if the message exists
         const message_id = req.params.message_ID;
@@ -72,7 +74,7 @@ messageRouter.put("/updateMessage/:message_ID", async (req, res) => {
 })
 
 //delete message
-messageRouter.delete("/deleteMessage/:message_ID", async (req, res) => {
+messageRouter.delete("/deleteMessage/:message_ID", isAdmin, async (req, res) => {
     try {
         const message_id = req.params.message_ID;
         // Check if the message exists
