@@ -1,5 +1,6 @@
 import { Router } from "express";
 import Room from "../models/Room.js";
+import isAdmin from "../middlewares/isAdmin.js";
 
 //ititalize the router
 const roomRouter = Router();
@@ -59,7 +60,7 @@ roomRouter.post('/createRoom', async (req, res) => {
 });
 
 //update room
-roomRouter.put("/updateRoom/:room_ID", async (req, res) => {
+roomRouter.put("/updateRoom/:room_ID", isAdmin, async (req, res) => {
     try {
         // Check if the room exists
         const room_id = req.params.room_ID;
@@ -84,7 +85,7 @@ roomRouter.put("/updateRoom/:room_ID", async (req, res) => {
 })
 
 //delete room
-roomRouter.delete("/deleteRoom/:room_ID", async (req, res) => {
+roomRouter.delete("/deleteRoom/:room_ID", isAdmin, async (req, res) => {
     try {
         const room_id = req.params.room_ID;
         // Check if the room exists

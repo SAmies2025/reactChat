@@ -2,6 +2,7 @@ import { Router } from "express";
 import Message from "../models/Message.js";
 import User from "../models/User.js";
 import Room from "../models/Room.js";
+import isAdmin from "../middlewares/isAdmin.js";
 
 const messageRouter = Router();
 
@@ -47,7 +48,7 @@ messageRouter.post("/createMessage", async (req, res) => {
 });
 
 //update message
-messageRouter.put("/updateMessage/:message_ID", async (req, res) => {
+messageRouter.put("/updateMessage/:message_ID", isAdmin, async (req, res) => {
     try {
         // Check if the message exists
         const message_id = req.params.message_ID;
@@ -72,7 +73,7 @@ messageRouter.put("/updateMessage/:message_ID", async (req, res) => {
 })
 
 //delete message
-messageRouter.delete("/deleteMessage/:message_ID", async (req, res) => {
+messageRouter.delete("/deleteMessage/:message_ID", isAdmin, async (req, res) => {
     try {
         const message_id = req.params.message_ID;
         // Check if the message exists
