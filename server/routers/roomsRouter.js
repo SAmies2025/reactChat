@@ -1,5 +1,7 @@
 import { Router } from "express";
 import Room from "../models/Room.js";
+import isAdmin from "../middlewares/isAdmin.js";
+import validateSession from '../middlewares/validatesession.js';
 
 //ititalize the router
 const roomRouter = Router();
@@ -36,7 +38,7 @@ roomRouter.get("/room/:roomName", async (req, res) => {
 });
 
 //Create a new room
-roomRouter.post('/createRoom', async (req, res) => {
+roomRouter.post('/createRoom', validateSession, async (req, res) => {
     try {
         //check if room already exists
         const existingRoom = await Room.findOne({roomName: req.body.roomName})
@@ -59,7 +61,7 @@ roomRouter.post('/createRoom', async (req, res) => {
 });
 
 //update room
-roomRouter.put("/updateRoom/:room_ID", async (req, res) => {
+roomRouter.put("/updateRoom/:room_ID", isAdmin, async (req, res) => {
     try {
         // Check if the room exists
         const room_id = req.params.room_ID;
@@ -84,7 +86,7 @@ roomRouter.put("/updateRoom/:room_ID", async (req, res) => {
 })
 
 //delete room
-roomRouter.delete("/deleteRoom/:room_ID", async (req, res) => {
+roomRouter.delete("/deleteRoom/:room_ID", isAdmin, async (req, res) => {
     try {
         const room_id = req.params.room_ID;
         // Check if the room exists
