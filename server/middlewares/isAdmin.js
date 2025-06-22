@@ -1,15 +1,15 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-const isAdmin = async(req, res, next) => {
+export default async function isAdmin(req, res, next) {
     try{
          // Get token from Authorization header
-        const token = req.headers.authorization?.split(' ')[1]; // Bearer TOKEN Bearer must be added to the value of the Authorization Key in the Headers in PostMan to test!
-        if (!token) {
+        const sessionToken = req.headers.authorization; // must be added to the value of the Authorization Key in the Headers in PostMan to test!
+        if (!sessionToken) {
             return res.json ({ error: "No token provided!" })
         }
         // Verify and decode token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(sessionToken, process.env.JWT_SECRET);
         // Find user by ID from token
         const user = await User.findById(decoded._id);
         if (!user) {
@@ -25,5 +25,3 @@ const isAdmin = async(req, res, next) => {
         res.json({ error: err });
     }
 }
-
-export default isAdmin;

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import Room from "../models/Room.js";
 import isAdmin from "../middlewares/isAdmin.js";
+import validateSession from '../middlewares/validatesession.js';
 
 //ititalize the router
 const roomRouter = Router();
@@ -37,7 +38,7 @@ roomRouter.get("/room/:roomName", async (req, res) => {
 });
 
 //Create a new room
-roomRouter.post('/createRoom', async (req, res) => {
+roomRouter.post('/createRoom', validateSession, async (req, res) => {
     try {
         //check if room already exists
         const existingRoom = await Room.findOne({roomName: req.body.roomName})
