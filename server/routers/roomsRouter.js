@@ -58,4 +58,46 @@ roomRouter.post('/createRoom', async (req, res) => {
 
 });
 
+//update room
+roomRouter.put("/updateRoom/:room_ID", async (req, res) => {
+    try {
+        // Check if the room exists
+        const room_id = req.params.room_ID;
+        const existingRoom = await Room.findById(room_id);
+        if (!existingRoom) {
+            return res.json({ error: 'Room not found' });
+        }
+        const updatedRoom = await Room.findByIdAndUpdate(
+            room_id,
+            { ...req.body },
+            { new: true }
+        );
+        //if room has no changes, return an error
+        if (!updatedRoom) {
+            return res.json({ error: 'Room must have changes to update' });
+        }
+        //return the updated room
+        res.json({ notice: 'Room updated successfully', message: updatedRoom });
+    } catch (err) {
+        res.json({ error: err.message });
+    }
+})
+
+//delete room
+roomRouter.delete("/deleteRoom/:room_ID", async (req, res) => {
+    try {
+        const room_id = req.params.room_ID;
+        // Check if the room exists
+        const existingRoom = await Room.findById(room_id)
+        if (!existingRoom) {
+            return res.json({ error: 'Room not found' });
+        }
+        //Delete the room
+        await existingRoom.deleteOne();
+        res.json({ notice: 'Room deleted successfully' });
+    } catch (err) {
+        res.json({ error: err.message });
+    }
+})
+
 export default roomRouter;
