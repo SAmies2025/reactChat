@@ -13,7 +13,7 @@ userRouter.post('/signup', async (req, res) => {
         // Check if user already exists
         const existingUser = await User.findOne({ email: req.body.email });
         if (existingUser) {
-            return res.json({ error: 'User already exists' });
+            return res.status(400).json({ error: 'User already exists' });
         }
         // Encrypt password to store in the db
         const passwordHash = bcrypt.hashSync(req.body.password, 10);
@@ -30,7 +30,7 @@ userRouter.post('/signup', async (req, res) => {
         );
         res.json({ message: 'Sign up successful', sessionToken });
     } catch (err) {
-        res.json({ error: err });
+        res.status(400).json({ error: err });
         console.log(err);
     }
 });
@@ -43,7 +43,7 @@ userRouter.post('/signin', async (req, res) => {
             email: req.body.email,
         });
         if (!bcrypt.compareSync(req.body.password, user.password)) {
-            res.json( { error: "incorrect password"});
+            res.status(400).json( { error: "incorrect password"});
 
         }
             const sessionToken = jwt.sign(
@@ -52,10 +52,10 @@ userRouter.post('/signin', async (req, res) => {
             //expires in 1 day
             { expiresIn: 60 *60 *24 }
         );
-        res.json({ message: "Login Successful", sessionToken, user: user });
+        res.status(200).json({ message: "Login Successful", sessionToken, user: user });
 
     } catch(err) {
-        res.json({error: err});
+        res.status(400).json({error: err});
         console.log(err);
     }
 });
@@ -67,7 +67,7 @@ userRouter.put("/updateUser/:user_ID", async (req, res) => {
         const user_id = req.params.user_ID;
         const existingUser = await User.findById(user_id);
         if (!existingUser) {
-            return res.json({ error: 'User not found' });
+            return res.status(400).json({ error: 'User not found' });
         }
         const updatedUser = await User.findByIdAndUpdate(
             user_id,
@@ -79,9 +79,9 @@ userRouter.put("/updateUser/:user_ID", async (req, res) => {
             return res.json({ error: 'User must have changes to update' });
         }
         //return the updated user
-        res.json({ notice: 'User updated successfully', message: updatedUser });
+        res.status(200).json({ notice: 'User updated successfully', message: updatedUser });
     } catch (err) {
-        res.json({ error: err.message });
+        res.status(400).json({ error: err.message });
     }
 });
 
@@ -92,13 +92,13 @@ userRouter.delete("/deleteUser/:user_ID", async (req, res) => {
         // Check if the user exists
         const existingUser = await User.findById(user_id)
         if (!existingUser) {
-            return res.json({ error: 'User not found' });
+            return res.status(400).json({ error: 'User not found' });
         }
         //Delete the User
         await existingUser.deleteOne();
-        res.json({ notice: 'User deleted successfully' });
+        res.status(200).json({ notice: 'User deleted successfully' });
     } catch (err) {
-        res.json({ error: err.message });
+        res.status(400).json({ error: err.message });
     }
 })
 
