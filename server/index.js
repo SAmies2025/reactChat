@@ -1,5 +1,6 @@
 //import applications
 import express from 'express';
+import cors from 'cors';
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import userRouter from './routers/userRouter.js';
@@ -7,6 +8,11 @@ import roomRouter from './routers/roomsRouter.js';
 import messageRouter from './routers/messageRouters.js';
 
 const app = express();
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+    }));
 app.use(express.json());
 app.use(userRouter);
 app.use(roomRouter);
