@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router";
-import { Link } from "react-router";
 import { useState } from 'react';
 
 export default function Signup() {
     const navigate = useNavigate();
-    const [error, setError] = useState('');
+    // const [error, setError] = useState('');
     const [showSignInLink, setShowSignInLink] = useState(false);
     
     async function handleSignUp(event) {
@@ -33,36 +32,26 @@ export default function Signup() {
                     // Show the Signin button          
                     setShowSignInLink(true); 
                 } else {
-                setError(result.error || 'Signup failed');
+                alert(result.error || 'Signup failed');
                 setShowSignInLink(false);
+                navigate("/");
                 }
             }
         } catch (err) {
-            setError(`Error: ${err}`);
+            alert(`Error: ${err}`);
         }
     } 
 
     return (
-        <>
-            <h1>Sign Up</h1>
+        <div className='flex flex-col gap-2'>
+            <h1 className="text-xl font-bold  m-2">Sign Up</h1>
             <form onSubmit={handleSignUp}>
-                <input type="text" name="firstName" placeholder="First Name" required/>
-                <input type="text" name="lastName" placeholder="Last Name" required/>
-                <input type="email" name="email" placeholder="email" required />
-                <input type="password" name="password" placeholder="Password" required />
-                <button type="submit">Sign Up</button>
+                <input type="text" class="input input-md m-2" name="firstName" placeholder="First Name" required/>
+                <input type="text" class="input input-md m-2" name="lastName" placeholder="Last Name" required/>
+                <input type="email" class="input input-md m-2" name="email" placeholder="email" required />
+                <input type="password" class="input input-md m-2" name="password" placeholder="Password" required />
+                <button type="submit" className='btn btn-primary'>Sign Up</button>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-              
-            {/* Conditionally show sign in link */}
-            {showSignInLink && (
-                <div>
-                    <p>Please try again or sign in if you already have an account.</p>
-                    <Link to="/signin">
-                        <button>Sign In</button>
-                    </Link>
-                </div>
-            )}
-        </>
+        </div>
     );
 }
