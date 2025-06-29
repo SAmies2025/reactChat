@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 export default function Signin() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [error, setError] = useState('');
+    // const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     // Check for existing session token on component mount
@@ -15,7 +15,7 @@ export default function Signin() {
 
     const handleSignIn = async (event) => {
         event.preventDefault();
-        setError('');
+        // setError('');
         setLoading(true);
 
         const formData = new FormData(event.currentTarget);
@@ -36,47 +36,34 @@ export default function Signin() {
                 localStorage.setItem('sessionToken', result.sessionToken);
                 setIsLoggedIn(true);
                 alert('Successfully signed in!');
+                navigate("/");
             } else {
-                setError(result.error || 'Sign in failed');
+                alert(result.error || 'Sign in failed');
+                navigate("/");
             }
         } catch (err) {
-            setError('Network error. Please try again.');
+            alert('Network error. Please try again.');
+             navigate("/");
         } finally {
             setLoading(false);
+            navigate("/");
         }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('sessionToken');
-        setIsLoggedIn(false);
-    };
-
-    // If user is already logged in, show logged in state
-    if (isLoggedIn) {
-        return (
-            <div>
-                <h1>Welcome Back!</h1>
-                <button onClick={handleLogout}>Logout</button>
-            </div>
-        );
-    }
-
-    // If no session token, show login form
+    // Login Form
     return (
-        <div>
-            <h1>Sign In</h1>
-            <form onSubmit={handleSignIn}>
-                <input type="email" name="email" placeholder="Email" required 
-                />
-                <input type="password" name="password" placeholder="Password" required 
+        <div className='flex flex-col gap-2'>
+            <h1 className="text-xl font-bold  m-2">Sign In</h1>
+            <form onSubmit={handleSignIn} >
+                <input type="email"  class="input input-md m-2" name="email" placeholder="Email" required 
+               />
+                <input type="password" class="input input-md m-2"name="password" placeholder="Password" required 
                 />
                 {/* disbles the button if loading so that you can not continually click on it */}
-                <button type="submit" disabled={loading}>
+                <button type="submit" className='btn btn-primary' disabled={loading}>
                     {loading ? 'Signing in...' : 'Sign In'}
                 </button>
             </form>
-            
-            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 }

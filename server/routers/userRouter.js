@@ -42,6 +42,13 @@ userRouter.post('/signin', async (req, res) => {
         const user = await User.findOne({
             email: req.body.email,
         });
+
+        // Check if user exists BEFORE accessing password
+        if (!user) {
+            return res.status(400).json({ error: 'No user found' });
+        }
+
+        //if user exist, check pw
         if (!bcrypt.compareSync(req.body.password, user.password)) {
             res.status(400).json( { error: "incorrect password"});
 
